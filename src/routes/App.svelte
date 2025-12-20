@@ -1,20 +1,20 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { address, connected, balance, network } from "$lib/common/store";
+    import { connected, balance, web_explorer_uri_addr, address, network, user_tokens } from "$lib/common/store";
     import { browser } from "$app/environment";
     import Theme from "./Theme.svelte";
-    import { Badge } from "$lib/components/ui/badge";
     import * as Dialog from "$lib/components/ui/dialog/index.js";
     import { Button } from "$lib/components/ui/button/index.js";
     import { Input } from "$lib/components/ui/input/index.js";
     import { Label } from "$lib/components/ui/label/index.js";
     import { submit } from "$lib/ergo/actions/submit";
-    import { explorer_uri, network_id } from "$lib/ergo/envs";
+    import { explorer_uri } from "$lib/ergo/envs";
 
     // Import advanced wallet components
-    import WalletButton from "$lib/wallet/WalletButton.svelte";
-    import WalletAddressChangeHandler from "$lib/wallet/WalletAddressChangeHandler.svelte";
     import SettingsModal from "$lib/components/SettingsModal.svelte";
+    import { walletAddress, walletBalance, WalletButton, walletConnected } from "wallet-svelte-component";
+      import { WalletAddressChangeHandler } from 'wallet-svelte-component';
+    import { get } from "svelte/store";
 
     // --- Estado de la UI ---
     let current_height: number | null = null;
@@ -168,6 +168,33 @@
         }
     });
 
+    // Subscribe to new wallet system instead of old connected store
+    walletConnected.subscribe(async (isConnected) => {
+        console.log("Wallet connection state changed:", isConnected);
+        if (isConnected) {
+            // Sync old stores with new wallet system for backward compatibility
+            const walletAddr = get(walletAddress);
+            const walletBal = get(walletBalance);
+
+            address.set(walletAddr);
+            connected.set(true);
+            balance.set(Number(walletBal.nanoErgs));
+            network.set("ergo-mainnet"); // Set appropriate network
+
+            // Update the balance information whenever connection state changes
+            await updateWalletInfo();
+        } else {
+            // Clear old stores when disconnected
+            address.set(null);
+            connected.set(false);
+            balance.set(null);
+            network.set(null);
+
+            // Clear cached token data to ensure fresh data on next connection
+            user_tokens.set(new Map());
+        }
+    });
+
     async function updateWalletInfo() {
         if (typeof ergo === "undefined" || !$connected) return;
         try {
@@ -228,7 +255,7 @@
         <div class="flex-1"></div>
 
         <div class="user-section">
-            <WalletButton />
+            <WalletButton explorerUrl={$web_explorer_uri_addr} />
             <button
                 class="settings-button"
                 on:click={() => (showSettingsModal = true)}

@@ -17,14 +17,33 @@ export const user_tokens = writable<Map<string, any>>(new Map());
 
 // Helper function to create a persistent store
 function createPersistentStore<T>(key: string, defaultValue: T) {
-    const storedValue = browser ? localStorage.getItem(key) : null;
-    const initial = storedValue ? JSON.parse(storedValue) : defaultValue;
+    let initial = defaultValue;
+
+    if (browser) {
+        const storedValue = localStorage.getItem(key);
+        
+        // Check if value exists and isn't the string "undefined" which breaks JSON.parse
+        if (storedValue && storedValue !== "undefined" && storedValue !== "null") {
+            try {
+                initial = JSON.parse(storedValue);
+            } catch (e) {
+                // If parsing fails, fail silently and stick with defaultValue
+                // This "heals" the corruption automatically
+                console.warn(`Corrupted storage for ${key}, resetting to default.`);
+            }
+        }
+    }
 
     const store = writable<T>(initial);
 
     if (browser) {
         store.subscribe(value => {
-            localStorage.setItem(key, JSON.stringify(value));
+            // NEVER write "undefined" to storage
+            if (value === undefined) {
+                localStorage.removeItem(key);
+            } else {
+                localStorage.setItem(key, JSON.stringify(value));
+            }
         });
     }
 
