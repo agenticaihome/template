@@ -2,85 +2,84 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Web fonts to match celaut-project.github.io (Playfair Display + Lato). */
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Playfair+Display:wght@500;700&display=swap');
+
 @layer base {
   :root {
-    /* Variables de fuente basadas en tu tema */
-    --font-heading: 'Montserrat', sans-serif;
-    --font-body: 'Inconsolata', monospace;
+    /* Typography — Playfair Display for headings, Lato for body, matching
+       the celaut-project.github.io public site. */
+    --font-heading: 'Playfair Display', 'Inter', system-ui, serif;
+    --font-body: 'Lato', 'Inter', system-ui, sans-serif;
 
-    /* Tema de colores basado en las imágenes */
-    /* Colores principales: Un fondo crema claro y un texto casi negro para un contraste alto y elegante. */
-    --background: 33 60% 98%; /* Crema claro, aprox #FDFBF8 */
-    --foreground: 210 4% 9%;   /* Negro suave, #151617 */
+    /* Palette ported from celaut-project.github.io design tokens:
+         background  #f9eee7  (warm cream)
+         foreground  #1d4241  (deep teal)
+         accent      #ef9c82  (soft coral) — hover #e88a6f
+         muted text  #576c6b
+         border      #e0d5cb
+    */
+    --background: 24 60% 94%;
+    --foreground: 179 39% 19%;
 
-    /* Tarjetas: Un tono melocotón pálido para los recuadros. */
-    --card: #fdfaf780;         /* #F2DED0 */
-    --card-foreground: 210 4% 9%; /* #151617 */
+    --card: 0 0% 100%;
+    --card-foreground: 179 39% 19%;
 
-    --popover: 33 60% 98%;
-    --popover-foreground: 210 4% 9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 179 39% 19%;
 
-    /* Primario: Se usa el color del texto como acento principal para botones y enlaces. */
-    --primary: 210 4% 9%;         /* #151617 */
-    --primary-foreground: 0 0% 100%; /* Blanco, para el texto sobre el botón primario */
+    --primary: 15 80% 73%;
+    --primary-foreground: 179 39% 19%;
 
-    /* Secundario: El fondo de la tarjeta puede funcionar como fondo secundario. */
-    --secondary: 28 55% 91%;        /* #F2DED0 */
-    --secondary-foreground: 210 4% 9%; /* #151617 */
+    --secondary: 28 22% 84%;
+    --secondary-foreground: 179 39% 19%;
 
-    /* Muted: El segundo color de acento opcional para elementos discretos. */
-    --muted: 40 9% 72%;           /* #BAB6AA */
-    --muted-foreground: 210 4% 15%; /* Un poco más claro que el texto principal */
+    --muted: 28 30% 90%;
+    --muted-foreground: 178 10% 38%;
 
-    /* Acento: Se alinea con el color primario, ya que el tema es minimalista. */
-    --accent: 210 4% 9%;          /* #151617 */
-    --accent-foreground: 0 0% 100%;
+    --accent: 15 80% 73%;
+    --accent-foreground: 179 39% 19%;
 
-    /* Destructivo: Un rojo estándar que no desentona. */
-    --destructive: 0 84% 60%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Bordes e Inputs: El color de texto se usa para los bordes, creando un look definido. */
-    --border: 210 4% 9%;         /* #151617 */
-    --input: 28 55% 91%;          /* #F2DED0 - para el fondo del input */
-    --ring: 40 9% 72%;            /* #BAB6AA - para el anillo de foco */
+    --border: 28 22% 84%;
+    --input: 28 22% 84%;
+    --ring: 15 80% 73%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
   }
 
   .dark {
-    /* --- CORRECCIÓN --- */
-    /* Se aumentó la luminosidad de la tarjeta para mayor contraste. */
-    --background: 210 4% 9%;         /* #151617 */
-    --foreground: 33 60% 98%;         /* #FDFBF8 */
+    /* Dark theme uses the celaut deep-teal as the surface and keeps the
+       coral accent. Foreground is the warm cream so contrast stays high. */
+    --background: 179 39% 14%;
+    --foreground: 24 60% 94%;
 
-    --card: #252628;
-    --card-foreground: 33 60% 98%;
+    --card: 179 39% 17%;
+    --card-foreground: 24 60% 94%;
 
-    --popover: 210 4% 9%;
-    --popover-foreground: 33 60% 98%;
+    --popover: 179 39% 17%;
+    --popover-foreground: 24 60% 94%;
 
-    /* En modo oscuro, el primario es el color claro del texto. */
-    --primary: 33 60% 98%;
-    --primary-foreground: 210 4% 9%;
+    --primary: 15 80% 73%;
+    --primary-foreground: 179 39% 19%;
 
-    /* Actualizado para coincidir con el color de la tarjeta. */
-    --secondary: 210 4% 15%;
-    --secondary-foreground: 33 60% 98%;
+    --secondary: 179 30% 22%;
+    --secondary-foreground: 24 60% 94%;
 
-    --muted: 40 9% 25%;
-    --muted-foreground: 40 9% 72%;
+    --muted: 179 30% 22%;
+    --muted-foreground: 24 25% 78%;
 
-    --accent: 33 60% 98%;
-    --accent-foreground: 210 4% 9%;
+    --accent: 15 80% 73%;
+    --accent-foreground: 179 39% 19%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 33 60% 98%;
-    /* Actualizado para coincidir con el color de la tarjeta. */
-    --input: 210 4% 15%;
-    --ring: 40 9% 72%;
+    --border: 179 25% 28%;
+    --input: 179 25% 28%;
+    --ring: 15 80% 73%;
   }
 }
 
@@ -91,10 +90,13 @@
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
-    font-weight: 900; /* Corresponde a la variante "Negro" de Montserrat */
+    font-weight: 700;
     @apply text-foreground;
+    letter-spacing: -0.02em;
   }
 }
